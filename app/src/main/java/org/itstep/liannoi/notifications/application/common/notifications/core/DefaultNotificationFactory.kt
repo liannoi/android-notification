@@ -19,7 +19,7 @@ open class DefaultNotificationFactory(
         const val THIRD_ID: Int = 3
         const val THIRD_REPLY_EXTRA: String = "ACTION_REPLY_EXTRA"
         const val THIRD_REPLY_KEYCODE: String = "ACTION_REPLY"
-        const val THIRD_REPLY_CODE: Int = 5
+        const val THIRD_REPLY_CODE: Int = 200
         const val THIRD_REPLY: String = "Reply"
     }
 

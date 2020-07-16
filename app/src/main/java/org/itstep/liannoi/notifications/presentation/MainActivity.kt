@@ -20,20 +20,8 @@ class MainActivity : AppCompatActivity() {
         notifyDefault(notificationService)
         Thread.sleep(1400)
         notifyPlayer(notificationService)
-
-        notificationService.notify(
-            Defaults.THIRD_ID,
-            ActivityNotificationFactory(
-                this, DefaultNotificationFactory.Details("Default Title", "Default Text"),
-                ActivityNotificationFactory.Action(
-                    SecondActivity::class.java,
-                    Defaults.THIRD_REPLY_EXTRA,
-                    Defaults.THIRD_REPLY_KEYCODE,
-                    Defaults.THIRD_REPLY_CODE,
-                    Defaults.THIRD_REPLY
-                )
-            )
-        )
+        Thread.sleep(1400)
+        notifyInput(notificationService)
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -45,10 +33,7 @@ class MainActivity : AppCompatActivity() {
             Defaults.FIRST_ID,
             DefaultNotificationFactory(
                 this,
-                DefaultNotificationFactory.Details(
-                    "Default Title",
-                    "Default Text"
-                )
+                DefaultNotificationFactory.Details("Default Title", "Default Text")
             )
         )
     }
@@ -79,4 +64,21 @@ class MainActivity : AppCompatActivity() {
         action: String
     ): ServiceNotificationFactory.Action<PlayerService> =
         ServiceNotificationFactory.Action(requestCode, PlayerService::class.java, action, icon)
+
+    private fun notifyInput(notificationService: NotificationService) {
+        notificationService.notify(
+            Defaults.THIRD_ID,
+            ActivityNotificationFactory(
+                this,
+                DefaultNotificationFactory.Details("Default Title", "Default Text"),
+                ActivityNotificationFactory.Action(
+                    SecondActivity::class.java,
+                    Defaults.THIRD_REPLY_EXTRA,
+                    Defaults.THIRD_REPLY_KEYCODE,
+                    Defaults.THIRD_REPLY_CODE,
+                    Defaults.THIRD_REPLY
+                )
+            )
+        )
+    }
 }
