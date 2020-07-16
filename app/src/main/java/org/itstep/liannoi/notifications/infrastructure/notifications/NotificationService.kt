@@ -23,4 +23,8 @@ class NotificationService(
     fun notify(id: Int, notificationFactory: NotificationFactory) {
         manager.notify(id, notificationFactory.create())
     }
+
+    fun cancel(id: Int) {
+        manager.cancel(id)
+    }
 }

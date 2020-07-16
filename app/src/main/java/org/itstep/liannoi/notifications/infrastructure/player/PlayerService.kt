@@ -5,9 +5,15 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.IBinder
 import org.itstep.liannoi.notifications.R
-import org.itstep.liannoi.notifications.infrastructure.InfrastructureDefaults
 
 class PlayerService : Service() {
+
+    object Defaults {
+        const val ACTION_PLAY: String = "Play"
+        const val ACTION_PLAY_CODE: Int = 1
+        const val ACTION_STOP: String = "Stop"
+        const val ACTION_STOP_CODE: Int = -1
+    }
 
     private lateinit var mediaPlayer: MediaPlayer
 
@@ -37,8 +43,8 @@ class PlayerService : Service() {
     ///////////////////////////////////////////////////////////////////////////
 
     private fun stopIfRequest(intent: Intent?) {
-        val shouldStop: Boolean = intent?.action?.toLowerCase() ==
-                InfrastructureDefaults.SERVICE_PLAYER_KEYCODE_STOP.toLowerCase()
+        val shouldStop: Boolean =
+            intent?.action?.toLowerCase() == Defaults.ACTION_STOP.toLowerCase()
 
         if (shouldStop) stopSelf()
     }

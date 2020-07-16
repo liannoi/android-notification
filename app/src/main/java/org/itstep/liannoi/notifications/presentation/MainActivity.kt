@@ -3,11 +3,11 @@ package org.itstep.liannoi.notifications.presentation
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import org.itstep.liannoi.notifications.R
-import org.itstep.liannoi.notifications.application.ApplicationDefaults
-import org.itstep.liannoi.notifications.application.common.notifications.DefaultNotificationChannelFactory
-import org.itstep.liannoi.notifications.application.common.notifications.DefaultNotificationFactory
-import org.itstep.liannoi.notifications.application.common.notifications.ServiceNotificationFactory
-import org.itstep.liannoi.notifications.infrastructure.InfrastructureDefaults
+import org.itstep.liannoi.notifications.application.common.notifications.channels.DefaultNotificationChannelFactory
+import org.itstep.liannoi.notifications.application.common.notifications.core.DefaultNotificationFactory
+import org.itstep.liannoi.notifications.application.common.notifications.core.DefaultNotificationFactory.Defaults
+import org.itstep.liannoi.notifications.application.common.notifications.core.actions.ServiceNotificationFactory
+import org.itstep.liannoi.notifications.application.common.notifications.core.replies.ActivityNotificationFactory
 import org.itstep.liannoi.notifications.infrastructure.notifications.NotificationService
 import org.itstep.liannoi.notifications.infrastructure.player.PlayerService
 
@@ -18,7 +18,22 @@ class MainActivity : AppCompatActivity() {
 
         val notificationService = NotificationService(this, DefaultNotificationChannelFactory())
         notifyDefault(notificationService)
+        Thread.sleep(1400)
         notifyPlayer(notificationService)
+
+        notificationService.notify(
+            Defaults.THIRD_ID,
+            ActivityNotificationFactory(
+                this, DefaultNotificationFactory.Details("Default Title", "Default Text"),
+                ActivityNotificationFactory.Action(
+                    SecondActivity::class.java,
+                    Defaults.THIRD_REPLY_EXTRA,
+                    Defaults.THIRD_REPLY_KEYCODE,
+                    Defaults.THIRD_REPLY_CODE,
+                    Defaults.THIRD_REPLY
+                )
+            )
+        )
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -27,29 +42,32 @@ class MainActivity : AppCompatActivity() {
 
     private fun notifyDefault(notificationService: NotificationService) {
         notificationService.notify(
-            ApplicationDefaults.CHANNEL_DEFAULT_NOTIFICATION_FIRST_ID,
+            Defaults.FIRST_ID,
             DefaultNotificationFactory(
                 this,
-                DefaultNotificationFactory.Details("Title Lorem", "Text Ipsum")
+                DefaultNotificationFactory.Details(
+                    "Default Title",
+                    "Default Text"
+                )
             )
         )
     }
 
     private fun notifyPlayer(notificationService: NotificationService) {
         notificationService.notify(
-            ApplicationDefaults.CHANNEL_DEFAULT_NOTIFICATION_SECOND_ID,
+            Defaults.SECOND_ID,
             ServiceNotificationFactory(
                 this,
-                DefaultNotificationFactory.Details("Single Action Title", "Single Action Text"),
+                DefaultNotificationFactory.Details("Player", "Play control"),
                 prepareAction(
                     android.R.drawable.ic_media_play,
-                    InfrastructureDefaults.SERVICE_PLAYER_REQUEST_CODE_PLAY,
-                    "Play"
+                    PlayerService.Defaults.ACTION_PLAY_CODE,
+                    PlayerService.Defaults.ACTION_PLAY
                 ),
                 prepareAction(
                     android.R.drawable.ic_media_pause,
-                    InfrastructureDefaults.SERVICE_PLAYER_REQUEST_CODE_STOP,
-                    "Stop"
+                    PlayerService.Defaults.ACTION_STOP_CODE,
+                    PlayerService.Defaults.ACTION_STOP
                 )
             )
         )
@@ -60,5 +78,5 @@ class MainActivity : AppCompatActivity() {
         requestCode: Int,
         action: String
     ): ServiceNotificationFactory.Action<PlayerService> =
-        ServiceNotificationFactory.Action(icon, requestCode, PlayerService::class.java, action)
+        ServiceNotificationFactory.Action(requestCode, PlayerService::class.java, action, icon)
 }
